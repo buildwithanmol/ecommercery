@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentModes {
+  ONLINE
+  COD
+}
+
+model User {
+  id  String @id @default(uuid())
+  name String
+  email String
+  phone String 
+  shipping_address String?
+  billing_address String? 
+  gst_no String?
+  password String
+  verification_code Int? 
+  is_verified Boolean @default(false)
+}
+
+model Product {
+  id String @id @default(uuid())
+  title String 
+  description String 
+  short_description String
+  price String
+  product_sku String
+  return_type String
+  packaging String
+  payment_mode PaymentModes
+  additional_information String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  variations Variation[]
+  images Image[]
+
+}
+
+model Variation {
+  id String @id @default(uuid())
+  title String?
+  price String?
+  short_description String?
+  image_url String @db.Text
+
+  images Image[]
+
+  product_id String 
+  product Product @relation(references: [id], fields: [product_id], onDelete: Cascade)
+
+}
+
+model Image {
+  id String @id @default(uuid())
+  image_url String @db.Text
+
+  variation_id String? 
+  variation Variation? @relation(references: [id], fields: [variation_id], onDelete: Cascade)
+
+  product_id String?
+  product Product? @relation(references: [id], fields: [product_id], onDelete: Cascade)
+}

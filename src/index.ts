@@ -5,6 +5,7 @@ import { user_routes } from './routes/user_routes';
 import { product_router } from './routes/product_routes';
 import { variation_router } from './routes/variation_routes';
 import { image_router } from './routes/images_route';
+import { order_router } from './routes/order_route';
 config();
 
 const port = process.env.PORT || 3000
@@ -18,6 +19,7 @@ app.use('/user/', user_routes)
 app.use('/product/', product_router)
 app.use('/variation/', variation_router)
 app.use('/image/', image_router)
+app.use('/order/', order_router)
 
 app.get('/', (request: Request, response: Response) => {
     return response.send('[SERVER]: Welcome to Ecommerce API')

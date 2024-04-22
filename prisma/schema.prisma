@@ -23,6 +23,8 @@ model User {
   password String
   verification_code Int? 
   is_verified Boolean @default(false)
+  orders Order[]
+  shipment Shipment[]
 }
 
 model Product {
@@ -36,6 +38,8 @@ model Product {
   packaging String
   payment_mode PaymentModes
   additional_information String?
+  expected_delivery_date DateTime? 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -67,4 +71,53 @@ model Image {
 
   product_id String?
   product Product? @relation(references: [id], fields: [product_id], onDelete: Cascade)
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  // Product Id 
+  product_id String
+  
+  // Order Details
+  signature_id String
+  transaction_id String 
+  order_total String
+  quantity String
+
+  // Shipment Details
+  shipment Shipment[]
+  shipment_initiated Boolean @default(false)
+  // User Details
+  user_id String
+  user User @relation(references: [id], fields: [user_id], onDelete: Cascade)
+}
+
+model Shipment {
+  id String @id @default(uuid())
+  
+  // Order details
+  order_id String
+  order Order @relation(references: [id], fields: [order_id], onDelete: Cascade)
+
+  user_id String 
+  user User @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  is_delivered Boolean @default(false)
+  expected_date DateTime? 
+
+  // Tracking Details
+  tracking_state TrackingState[]
+}
+
+model TrackingState {
+  id String @id @default(uuid())
+  time_stamp DateTime @default(now())
+  title String 
+  description String 
+  isCompleted Boolean @default(false)
+  
+  // Shipment Details
+  shipment_id String 
+  shipment Shipment @relation(references: [id], fields: [shipment_id], onDelete: Cascade)
 }

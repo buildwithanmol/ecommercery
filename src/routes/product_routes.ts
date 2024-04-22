@@ -33,6 +33,22 @@ product_router.get('/get', async (request: Request, response: Response) => {
     }
 })
 
+product_router.post('/get/multiple', async (request: Request, response: Response) => {
+    try {
+        const ids = request.body;
+        const products = await db.product.findMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            }
+        })
+        return response.status(200).json(products)
+    } catch (error) {
+        return response.status(500).json(error)
+    }
+})
+
 product_router.post('/create', async (request: Request, response: Response) => {
     try {
         const body = request.body;

@@ -7,7 +7,8 @@ export const order_validation = z.object({
     transaction_id: z.string().max(255),
     order_total: z.string().max(255),
     user_id: z.string().max(255),
-    expected_delivery_date: z.any()
+    expected_delivery_date: z.any(), 
+    email: z.string().email().max(255)
 })
 
 export const multiple_order_validation = z.object({

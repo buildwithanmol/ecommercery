@@ -1,9 +1,10 @@
-import { Request, Response, Router, request, response } from "express";
+import { Request, Response, Router } from "express";
 import { multiple_order_validation, order_validation } from "../utils/validations/order";
 import { return_statement } from "../utils/helpers";
 import { db } from "../utils/db";
 import { shipment_update_validation, shipment_validation } from "../utils/validations/shipment";
 import { tracking_update_validation, tracking_validation } from "../utils/validations/tracking";
+import { orderConfirmationEmail } from "../utils/mail/order_placed";
 
 export const order_router = Router()
 
@@ -42,6 +43,8 @@ order_router.post('/create', async (request: Request, response: Response) => {
             }
         })
 
+        await orderConfirmationEmail(body.email, body.product_id)
+        
         return response.status(200).json(order)
     } catch (error) {
         console.log(error)
@@ -158,10 +161,10 @@ order_router.patch('/shipment/update', async (request: Request, response: Respon
         })
 
         const new_object = {
-            user_id: shipment_object.order_id,
+            user_id: shipment_object.user_id,
             order_id: shipment_object.order_id,
-            is_delivered: body.order_status || shipment_object.is_delivered,
-            expected_date: body.expected_date || shipment_object.expected_date  
+            is_delivered: body?.order_status || shipment_object.is_delivered,
+            expected_date: body?.expected_date || shipment_object?.expected_date || null  
         }
 
         const shipment = await db.shipment.update({
@@ -222,7 +225,8 @@ order_router.patch('/tracking/update', async (request: Request, response: Respon
 
         const new_object = {
             title: body.title || prev_data?.title,
-            description: body.description || prev_data?.description
+            description: body.description || prev_data?.description, 
+            isCompleted: body?.isCompleted || prev_data?.isCompleted
         }
 
         const tracking = await db.trackingState.update({

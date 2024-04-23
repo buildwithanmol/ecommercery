@@ -119,7 +119,8 @@ auth_routes.post('/sign-in', async (request: Request, response: Response) => {
             select: {
                 id: true,
                 email: true,
-                password: true
+                password: true, 
+                is_admin: true
             }
         })
 
@@ -129,7 +130,7 @@ auth_routes.post('/sign-in', async (request: Request, response: Response) => {
             return response.status(400).json(return_statement(false, "Invalid Password"))
         }
 
-        const token = sign({ id: user_exists.id }, process.env.JWT_SECRET as string, { expiresIn: '2h' })
+        const token = sign({ id: user_exists.id, is_admin: user_exists.is_admin }, process.env.JWT_SECRET as string, { expiresIn: '2h' })
 
         return response.status(200).json(return_statement(true, "User Signed In", {jwt: token} ))
 

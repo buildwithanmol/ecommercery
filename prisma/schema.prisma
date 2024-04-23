@@ -23,6 +23,7 @@ model User {
   password String
   verification_code Int? 
   is_verified Boolean @default(false)
+  is_admin Boolean @default(false)
   orders Order[]
   shipment Shipment[]
 }

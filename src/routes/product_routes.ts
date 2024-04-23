@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { db } from "../utils/db";
 import { product_validation, update_product } from "../utils/validations/product";
 import { return_statement } from "../utils/helpers";
+import { admin_middleware } from "../middlewares";
 
 export const product_router = Router()
 
@@ -49,7 +50,7 @@ product_router.post('/get/multiple', async (request: Request, response: Response
     }
 })
 
-product_router.post('/create', async (request: Request, response: Response) => {
+product_router.post('/create',admin_middleware, async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = product_validation.safeParse(body)
@@ -80,7 +81,7 @@ product_router.post('/create', async (request: Request, response: Response) => {
     }
 })
 
-product_router.patch('/patch', async (request: Request, response: Response) => {
+product_router.patch('/patch',admin_middleware, async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = update_product.safeParse(body)

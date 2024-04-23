@@ -30,3 +30,18 @@ export const auth_middleware = (request: RequestWithUser, response: Response, ne
     request.user = id;
     next();
 }
+
+export const admin_middleware = (request: RequestWithUser, response: Response, next: NextFunction) => {
+    const token = request.header('x-auth-token')
+
+    const verify_token: any = verify(token, process.env.JWT_SECRET as string);
+
+    if(!verify_token.is_admin) {
+        return response.status(401).json({
+            success: false,
+            message: "Unauthorized"
+        })
+    }
+    
+    next();
+}

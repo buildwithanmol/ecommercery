@@ -5,12 +5,13 @@ import { db } from "../utils/db";
 import { shipment_update_validation, shipment_validation } from "../utils/validations/shipment";
 import { tracking_update_validation, tracking_validation } from "../utils/validations/tracking";
 import { orderConfirmationEmail } from "../utils/mail/order_placed";
+import { admin_middleware } from "../middlewares";
 
 export const order_router = Router()
 
 // Order Routes
 
-order_router.post('/create', async (request: Request, response: Response) => {
+order_router.post('/create', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = order_validation.safeParse(body);
@@ -52,7 +53,7 @@ order_router.post('/create', async (request: Request, response: Response) => {
     }
 })
 
-order_router.post('/create/many', async (request: Request, response: Response) => {
+order_router.post('/create/many', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = multiple_order_validation.safeParse(body);
@@ -80,7 +81,7 @@ order_router.post('/create/many', async (request: Request, response: Response) =
     }
 })
 
-order_router.get('/get/:id', async (request: Request, response: Response) => {
+order_router.get('/get/:id', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const id = request.params.id;
 
@@ -110,7 +111,7 @@ order_router.get('/get/:id', async (request: Request, response: Response) => {
 
 // Shipment Routes
 
-order_router.post('/shipment/create', async (request: Request, response: Response) => {
+order_router.post('/shipment/create', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = shipment_validation.safeParse(body);
@@ -140,7 +141,7 @@ order_router.post('/shipment/create', async (request: Request, response: Respons
     }
 })
 
-order_router.patch('/shipment/update', async (request: Request, response: Response) => {
+order_router.patch('/shipment/update', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body: {
             id: string,
@@ -186,7 +187,7 @@ order_router.patch('/shipment/update', async (request: Request, response: Respon
 
 // Tracking Routes
 
-order_router.post('/tracking/create', async (request: Request, response: Response) => {
+order_router.post('/tracking/create', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = tracking_validation.safeParse(body);
@@ -208,7 +209,7 @@ order_router.post('/tracking/create', async (request: Request, response: Respons
     }    
 })
 
-order_router.patch('/tracking/update', async (request: Request, response: Response) => {
+order_router.patch('/tracking/update', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const body = request.body;
         const validation = tracking_update_validation.safeParse(body);
@@ -245,7 +246,7 @@ order_router.patch('/tracking/update', async (request: Request, response: Respon
     }
 })
 
-order_router.delete('/tracking/delete/:id', async (request: Request, response: Response) => {
+order_router.delete('/tracking/delete/:id', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const id = request.params.id;
 
@@ -267,7 +268,7 @@ order_router.delete('/tracking/delete/:id', async (request: Request, response: R
     }
 })
 
-order_router.get('/tracking/get/:shipment_id', async (request: Request, response: Response) => {
+order_router.get('/tracking/get/:shipment_id', admin_middleware,  async (request: Request, response: Response) => {
     try {
         const shipment_id = request.params.shipment_id;
 

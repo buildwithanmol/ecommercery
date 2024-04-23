@@ -12,7 +12,8 @@ exports.order_validation = zod_1.default.object({
     transaction_id: zod_1.default.string().max(255),
     order_total: zod_1.default.string().max(255),
     user_id: zod_1.default.string().max(255),
-    expected_delivery_date: zod_1.default.any()
+    expected_delivery_date: zod_1.default.any(),
+    email: zod_1.default.string().email().max(255)
 });
 exports.multiple_order_validation = zod_1.default.object({
     data: zod_1.default.array(zod_1.default.object({

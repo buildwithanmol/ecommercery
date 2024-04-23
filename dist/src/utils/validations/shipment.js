@@ -9,11 +9,11 @@ exports.shipment_validation = zod_1.default.object({
     user_id: zod_1.default.string().max(255),
     order_id: zod_1.default.string().max(255),
     title: zod_1.default.string().max(255),
-    description: zod_1.default.string().max(255)
+    description: zod_1.default.string().max(255),
 });
 exports.shipment_update_validation = zod_1.default.object({
-    order_status: zod_1.default.boolean(),
-    expected_date: zod_1.default.string().max(255),
+    order_status: zod_1.default.boolean().optional(),
+    expected_date: zod_1.default.string().max(255).optional(),
     id: zod_1.default.string().max(255),
 });
 //# sourceMappingURL=shipment.js.map

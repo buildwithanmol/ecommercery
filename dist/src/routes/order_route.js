@@ -7,6 +7,7 @@ const helpers_1 = require("../utils/helpers");
 const db_1 = require("../utils/db");
 const shipment_1 = require("../utils/validations/shipment");
 const tracking_1 = require("../utils/validations/tracking");
+const order_placed_1 = require("../utils/mail/order_placed");
 exports.order_router = (0, express_1.Router)();
 // Order Routes
 exports.order_router.post('/create', async (request, response) => {
@@ -39,6 +40,7 @@ exports.order_router.post('/create', async (request, response) => {
                 }
             }
         });
+        await (0, order_placed_1.orderConfirmationEmail)(body.email, body.product_id);
         return response.status(200).json(order);
     }
     catch (error) {
@@ -137,10 +139,10 @@ exports.order_router.patch('/shipment/update', async (request, response) => {
             }
         });
         const new_object = {
-            user_id: shipment_object.order_id,
+            user_id: shipment_object.user_id,
             order_id: shipment_object.order_id,
-            is_delivered: body.order_status || shipment_object.is_delivered,
-            expected_date: body.expected_date || shipment_object.expected_date
+            is_delivered: body?.order_status || shipment_object.is_delivered,
+            expected_date: body?.expected_date || shipment_object?.expected_date || null
         };
         const shipment = await db_1.db.shipment.update({
             where: {
@@ -191,7 +193,8 @@ exports.order_router.patch('/tracking/update', async (request, response) => {
         });
         const new_object = {
             title: body.title || prev_data?.title,
-            description: body.description || prev_data?.description
+            description: body.description || prev_data?.description,
+            isCompleted: body?.isCompleted || prev_data?.isCompleted
         };
         const tracking = await db_1.db.trackingState.update({
             where: {
